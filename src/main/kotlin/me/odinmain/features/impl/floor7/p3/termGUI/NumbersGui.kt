@@ -3,9 +3,13 @@ package me.odinmain.features.impl.floor7.p3.termGUI
 import me.odinmain.features.impl.floor7.p3.TerminalSolver
 import me.odinmain.utils.equalsOneOf
 import me.odinmain.utils.render.Colors
-import me.odinmain.utils.ui.rendering.NVGRenderer
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.FontRenderer
 
 object NumbersGui : TermGui() {
+
+    private val mc: Minecraft = Minecraft.getMinecraft()
+    private val fontRenderer: FontRenderer = mc.fontRendererObj
 
     override fun renderTerminal(slotCount: Int) {
         renderBackground(slotCount, 7)
@@ -27,11 +31,24 @@ object NumbersGui : TermGui() {
             val slotSize = 55f * TerminalSolver.customTermSize
             val fontSize = 30f * TerminalSolver.customTermSize
 
-            val textX = slotX + (slotSize - NVGRenderer.textWidth(amount.toString(), fontSize, NVGRenderer.defaultFont)) / 2f
-            val textY = slotY + (slotSize + fontSize) / 2f - fontSize * 0.9f
+            val scale = fontSize / 30f
+            val text = amount.toString()
 
-            if (TerminalSolver.showNumbers && solutionIndex != -1)
-                NVGRenderer.textShadow(amount.toString(), textX, textY, 30f * TerminalSolver.customTermSize, Colors.WHITE.rgba, NVGRenderer.defaultFont)
+            val textWidth = fontRenderer.getStringWidth(text) * scale
+            val textX = slotX + (slotSize - textWidth) / 2f
+            val textY = slotY + (slotSize - 8f * scale) / 2f
+
+            if (TerminalSolver.showNumbers && solutionIndex != -1) {
+                net.minecraft.client.renderer.GlStateManager.pushMatrix()
+                net.minecraft.client.renderer.GlStateManager.scale(scale, scale, scale)
+                fontRenderer.drawStringWithShadow(
+                    text,
+                    textX / scale,
+                    textY / scale,
+                    0xFFFFFF
+                )
+                net.minecraft.client.renderer.GlStateManager.popMatrix()
+            }
         }
     }
 }
