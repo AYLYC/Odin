@@ -1,4 +1,3 @@
-```kotlin
 package me.odinmain.features.impl.floor7.p3.termsim
 
 import me.odinmain.events.impl.TerminalEvent
@@ -7,36 +6,16 @@ import me.odinmain.features.impl.floor7.p3.TerminalTypes
 import me.odinmain.utils.postAndCatch
 import net.minecraft.inventory.Slot
 import net.minecraft.item.ItemStack
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.FontRenderer
-import net.minecraft.client.renderer.GlStateManager
 import kotlin.math.floor
 
 object NumbersSim : TermSimGUI(
     TerminalTypes.NUMBERS.windowName, TerminalTypes.NUMBERS.windowSize
 ) {
-    private val mc: Minecraft = Minecraft.getMinecraft()
-    private val fontRenderer: FontRenderer = mc.fontRendererObj
-
     override fun create() {
         val used = (1..14).shuffled().toMutableList()
         createNewGui {
-            if (floor(it.slotIndex / 9f) in 1f..2f && it.slotIndex % 9 in 1..7) {
-                val num = used.removeFirst()
-                val stack = ItemStack(pane, num, 14).apply { setStackDisplayName("") }
-
-                GlStateManager.pushMatrix()
-                val text = num.toString()
-                val scale = 1.0f
-                val textWidth = fontRenderer.getStringWidth(text) * scale
-                val x = 8f - textWidth / 2f
-                val y = 8f - (fontRenderer.FONT_HEIGHT / 2f)
-                GlStateManager.scale(scale, scale, scale)
-                fontRenderer.drawStringWithShadow(text, x / scale, y / scale, 0xFFFFFF)
-                GlStateManager.popMatrix()
-
-                stack
-            } else blackPane
+            if (floor(it.slotIndex / 9f) in 1f..2f && it.slotIndex % 9 in 1..7) ItemStack(pane, used.removeFirst(), 14).apply { setStackDisplayName("") }
+            else blackPane
         }
     }
 
@@ -51,4 +30,3 @@ object NumbersSim : TermSimGUI(
             TerminalSolver.lastTermOpened?.let { TerminalEvent.Solved(it).postAndCatch() }
     }
 }
-```
