@@ -1,4 +1,3 @@
-```kotlin
 package me.odinmain.features.impl.floor7.p3.termsim
 
 import me.odinmain.events.impl.TerminalEvent
@@ -7,17 +6,11 @@ import me.odinmain.features.impl.floor7.p3.TerminalTypes
 import me.odinmain.utils.postAndCatch
 import net.minecraft.inventory.Slot
 import net.minecraft.item.ItemStack
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.FontRenderer
-import net.minecraft.client.renderer.GlStateManager
 import kotlin.math.floor
 
 object RubixSim : TermSimGUI(
     TerminalTypes.RUBIX.windowName, TerminalTypes.RUBIX.windowSize
 ) {
-    private val mc: Minecraft = Minecraft.getMinecraft()
-    private val fontRenderer: FontRenderer = mc.fontRendererObj
-
     private val indices = listOf(12, 13, 14, 21, 22, 23, 30, 31, 32)
     private val order = listOf(1, 4, 13, 11, 14)
 
@@ -52,20 +45,5 @@ object RubixSim : TermSimGUI(
         }
     }
 
-    private fun genStack(meta: Int): ItemStack {
-        val stack = ItemStack(pane, 1, meta).apply { setStackDisplayName("") }
-
-        GlStateManager.pushMatrix()
-        val text = meta.toString()
-        val scale = 1.0f
-        val textWidth = fontRenderer.getStringWidth(text) * scale
-        val x = 8f - textWidth / 2f
-        val y = 8f - (fontRenderer.FONT_HEIGHT / 2f)
-        GlStateManager.scale(scale, scale, scale)
-        fontRenderer.drawStringWithShadow(text, x / scale, y / scale, 0xFFFFFF)
-        GlStateManager.popMatrix()
-
-        return stack
-    }
+    private fun genStack(meta: Int) = ItemStack(pane, 1, meta).apply { setStackDisplayName("") } // This makes unique itemstacks, so terminalsolver works.
 }
-```
